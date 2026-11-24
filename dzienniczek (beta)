@@ -1,0 +1,56 @@
+<?php
+require 'vendor/autoload.php';
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+?>
+
+<?php
+    $pdo = new PDO(
+    'mysql:host=localhost;dbname=twoja_baza;charset=utf8mb4',
+    'uzytkownik',
+    );
+    
+
+?>
+<?php
+$html = '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Wygenerowany PDF</h1>
+
+
+
+</body>
+';
+?>
+    <?php
+        $uzytkownik = $_POST['uzytkownik'];
+        $od = $_POST['od'];
+        $do = $_POST['do'];
+        $generuj = $_POST['generuj'];
+        $zapytanie = "SELECT * FROM `dane` WHERE `uzytkownik` = '$uzytkownik' AND `data` BETWEEN '$od' AND '$do'";
+        $wynik = $pdo->query($zapytanie);
+    ?>
+</body>
+<?php
+$options = new Options();
+$options->set('defaultFont', 'DejaVu Sans');
+
+$dompdf = new \Dompdf\Dompdf($options);
+$dompdf->loadHtml($html);
+$dompdf->setPaper('A4', 'portrait');
+$dompdf->render();
+?>
+
+<?php
+    $pdo = null;
+?>
+</html>
